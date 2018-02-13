@@ -1,0 +1,8 @@
+ui_mainwindow.h
+Makefile*
+*.pro.user
+.*.swp
+.qmake.stash
+moc_*
+*.obj
+*.exe
