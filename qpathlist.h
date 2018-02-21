@@ -1,39 +1,49 @@
 #ifndef QPATHLIST_H
 #define QPATHLIST_H
 
-#include <QObject>
 #include <QWidget>
 #include <QStringList>
 #include <QListWidget>
 
-class QPathList : public QListWidget
-{
+
+class QPathList : public QListWidget {
     Q_OBJECT
 public:
-    QPathList();
+    explicit QPathList();
     ~QPathList();
 
-    void setFromQStringList(/*in*/QStringList & strList);
-    void getToQStringList(/*out*/QStringList & strList);
-    void getToClipBoard();
+    void setAll(/*in*/const QStringList & strList); // first time means init
+    void getAll(/*out*/QStringList & strList);
+    void getCurrentStr(/*out*/QString & str); // get current select
+    void toClipBoard();
 
-    void addPathItem(QString & str);
-    void addPathItem();
+    // action
+    void addPathItem(/*in*/const QString str = "");
     void delPathItem(); // del current select
-    void getPathItem(QString & item); // get current select
-
-    void setCursorFollow();
+    void movePathItemUp();
+    void movePathItemDown();
+    void undo();
+    void redo();
 
 private:
+    class color;
+
+    // an action, and also a slot
+    void editPathItem(/*in*/const QWidget * editor);
+
+    // restore item string before being edited
+    QString itemStrRestore;
+
+    // to implement undo/redo
+    class ActionTracer;
+    ActionTracer * mActionTracer;
+    void exec(); // record action
 
 private slots:
-#if 0
     void on_currentItemChanged(
-            QListWidgetItem * current,
-            QListWidgetItem * previous);
-    void on_currentRowChanged( int currentRow);
-#endif
-
+                    QListWidgetItem * current,
+                    QListWidgetItem * previous);
+    void on_doubleClicked(const QModelIndex &index);
 };
 
 #endif // QPATHLIST_H

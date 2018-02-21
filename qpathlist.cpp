@@ -1,101 +1,247 @@
 #include "qpathlist.h"
+
 #include <QtWidgets>
+#include <QVector>
+#include <QPair>
 
-#include <QListWidgetItem>
-#include <QDebug>
-#include <QPoint>
-#include <QCursor>
+// #include <QDebug>
 
-namespace color {
-auto selectedBackground = QColor(Qt::gray) ;
-auto selectedForeground = QColor(Qt::darkYellow);
-auto ordinaryBackground = QColor(Qt::black);
-auto ordinaryForeground = QColor(Qt::green);
-}
+// color >>
+class QPathList::color {
+public:
+    static QColor selectedBackground;// = QColor(Qt::magenta);
+    static QColor selectedForeground;// = QColor(Qt::black);
+    static QColor ordinaryBackground;// = QColor(Qt::black);
+    static QColor ordinaryForeground;// = QColor(Qt::green);
+};
 
+QColor QPathList::color::selectedBackground = QColor(Qt::magenta);
+QColor QPathList::color::selectedForeground = QColor(Qt::black);
+QColor QPathList::color::ordinaryBackground = QColor(Qt::black);
+QColor QPathList::color::ordinaryForeground = QColor(Qt::green);
+// color <<
+
+// ActionTracer >>
+class QPathList::ActionTracer {
+public:
+    ActionTracer () {
+        flagLock = 0;
+        idx = -1;
+    }
+
+    void doClear() {
+        if(flagLock > 0)
+            return;
+        actHistory.clear();
+        idx = -1;
+    }
+
+    void doPush(/*in*/QStringList & strList, int & row) {
+        if(flagLock > 0)
+            return;
+
+        ++idx;
+        if(idx == actHistory.size())
+            actHistory.push_back(qMakePair(row, strList));
+        else
+            actHistory[idx] = qMakePair(row, strList);
+    }
+
+    bool toPrev(/*out*/ QStringList & strList, int & row) {
+        if(flagLock > 0)
+            return false;
+
+        if(idx == 0 || actHistory.size() == 0)
+            return false;
+
+        idx--;
+        row = actHistory[idx].first;
+        strList = actHistory[idx].second;
+        return true;
+    }
+
+    bool toNext(/*out*/ QStringList & strList, int & row) {
+        if(flagLock > 0)
+            return false;
+
+        if(idx == (actHistory.size() - 1))
+            return false;
+
+        ++idx;
+        row = actHistory[idx].first;
+        strList = actHistory[idx].second;
+        return true;
+    }
+
+private:
+    int idx;
+    // pair<currentRow, stringlist>
+    QVector<QPair<int, QStringList>> actHistory;
+
+    void lock() { ++flagLock; }
+    void unlock() {
+        if(flagLock > 0)
+            --flagLock;
+    }
+    int flagLock;
+    friend void QPathList::setAll(const QStringList &strList);
+    friend void QPathList::undo();
+    friend void QPathList::redo();
+};
+// ActionTracer <<
 
 QPathList::QPathList() {
-    this->setDragDropMode(QAbstractItemView::InternalMove);
+    connect(this, &QListWidget::currentItemChanged,
+            this, &QPathList::on_currentItemChanged);
+
+    connect(this->itemDelegate(), &QAbstractItemDelegate::commitData,
+            this, &QPathList::editPathItem);
+
+    connect(this, &QPathList::doubleClicked,
+            this, &QPathList::on_doubleClicked);
+
+    mActionTracer = new ActionTracer;
 }
 
-QPathList::~QPathList() { }
-
-void QPathList::setFromQStringList(/*in*/QStringList & strList) {
-    this->clear();
-    for(QString & str: strList) {
-        this->addPathItem(str);
-    }
-
+QPathList::~QPathList() {
+    delete mActionTracer;
 }
 
-void QPathList::getToQStringList(/*out*/QStringList & strList) {
+void QPathList::setAll(/*in*/const QStringList & strList) {
+    clear();
+    mActionTracer->lock();
+
+    for(const QString & str: strList)
+        addPathItem(str);
+
+    mActionTracer->unlock();
+
+    exec();
+}
+
+void QPathList::getAll(/*out*/QStringList & strList) {
     strList.clear();
-    auto cnt = this->count();
-    for(int i = 0; i < cnt; ++i) {
-        strList.append(this->item(i)->text());
+    auto cnt = count();
+    for(int i = 0; i < cnt; ++i)
+        strList.append(item(i)->text());
+}
+
+void QPathList::getCurrentStr(/*out*/QString & item) { // get current select
+    item = currentItem()->text();
+}
+
+void QPathList::toClipBoard() {
+    QStringList strList;
+    getAll(strList);
+    QApplication::clipboard()->setText(strList.join(';'));
+}
+
+// private slots >>
+void QPathList::on_currentItemChanged(
+                QListWidgetItem * current,
+                QListWidgetItem * previous) {
+    if(previous != nullptr) {
+        previous->setBackgroundColor(color::ordinaryBackground);
+        previous->setForeground(QBrush(color::ordinaryForeground));
+    }
+    if(current != nullptr) {
+        current->setBackgroundColor(color::selectedBackground);
+        current->setForeground(QBrush(color::selectedForeground));
     }
 }
 
-void QPathList::addPathItem(QString & str) {
+// edit-begin-signal detect
+void QPathList::on_doubleClicked(const QModelIndex &index) {
+    itemStrRestore = item(index.row())->text();
+}
+// private slots <<
+
+// action >>
+void QPathList::addPathItem(/*in*/const QString str) {
     QListWidgetItem * item = new QListWidgetItem(str);
-#if 1 //
+
     Qt::ItemFlags iFlag = item->flags();
     iFlag |= Qt::ItemIsEditable;
     item->setFlags(iFlag);
+
     item->setBackgroundColor(color::ordinaryBackground);
     item->setForeground(QBrush(color::ordinaryForeground));
-#endif
-    this->addItem(item);
-    this->setCurrentItem(item);
-}
 
-void QPathList::addPathItem() {
-    QString str("");
-    addPathItem(str);
+    addItem(item);
+    setCurrentItem(item);
+
+    exec();
 }
 
 void QPathList::delPathItem() {
-    auto row = this->currentRow();
-    if(row > -1) {
-        auto pt = this->takeItem(row);
+    auto row = currentRow();
+    if(row > -1 && row < count()) {
+        auto pt = takeItem(row);
         delete pt;
+        exec();
     }
 }
 
-void QPathList::setCursorFollow() {
-    // QListWidgetItem * item = this->currentItem();
-#if 0
-    QWidget * widget = this->itemWidget(item);
-    QPoint point =  widget->mapTo(this, QPoint(0, 0));
-    QCursor::setPos(this->mapToGlobal(point));
-#endif
-}
-#if 0
-void QPathList::on_currentItemChanged(
-        QListWidgetItem * current,
-        QListWidgetItem * previous) {
-    previous->setBackgroundColor(color::ordinaryBackground);
-    previous->setForeground(QBrush(color::ordinaryForeground));
+void QPathList::movePathItemUp() {
+    int rowIdx = currentRow();
+    if(rowIdx <= 0)
+        return;
+    QListWidgetItem * item = takeItem(rowIdx);
+    --rowIdx;
+    insertItem(rowIdx, item);
+    setCurrentRow(rowIdx);
+    exec();
 }
 
-void QPathList::on_currentRowChanged(
-        int currentRow) {
-    if(currentRow != -1) {
-        QListWidgetItem * item = this->item(currentRow);
-        item->setBackgroundColor(color::selectedBackground);
-        item->setForeground(QBrush(color::selectedForeground));
-    }
+void QPathList::movePathItemDown() {
+    int rowIdx = currentRow();
+    if(rowIdx >= count() - 1)
+        return;
+    QListWidgetItem * item = takeItem(rowIdx);
+    ++rowIdx;
+    insertItem(rowIdx, item);
+    setCurrentRow(rowIdx);
+    exec();
 }
-#endif
 
-void QPathList::getToClipBoard() {
-    QClipboard *clipboard = QApplication::clipboard();
+void QPathList::undo() {
     QStringList strList;
-    this->getToQStringList(strList);
-    QString str = strList.join(';');
-    clipboard->setText(str);
+    int row;
+    bool retval = mActionTracer->toPrev(strList, row);
+    if(retval) {
+        mActionTracer->lock();
+        setAll(strList);
+        mActionTracer->unlock();
+        setCurrentRow(row);
+    }
 }
 
-void QPathList::getPathItem(QString & item) { // get current select
-    item = this->currentItem()->text();
+void QPathList::redo() {
+    QStringList strList;
+    int row;
+    if(mActionTracer->toNext(strList, row)) {
+        mActionTracer->lock();
+        setAll(strList);
+        mActionTracer->unlock();
+
+        setCurrentRow(row);
+    }
+}
+
+// edit-finish-signal detect
+void QPathList::editPathItem(/*in*/const QWidget * editor) {
+    QString strNewText = reinterpret_cast<const QLineEdit *>(editor)->text();
+    if(itemStrRestore != strNewText)
+        exec();
+}
+// action <<
+
+// action trace
+void QPathList::exec() {
+    int row = currentRow();
+
+    QStringList strList;
+    getAll(strList);
+
+    mActionTracer->doPush(strList, row);
 }

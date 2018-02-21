@@ -7,10 +7,10 @@ class QEnvVarPath
 public:
     static bool Success;
     static bool Failure;
-    static bool setUsr(/*in*/QStringList & strList);
+    static bool setUsr(/*in*/const QStringList & strList);
     static bool getUsr(/*out*/QStringList & strList);
 
-    static bool setSys(/*in*/QStringList & strList);
+    static bool setSys(/*in*/const QStringList & strList);
     static bool getSys(/*out*/QStringList & strList);
 
 private:

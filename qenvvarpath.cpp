@@ -51,11 +51,10 @@ Info Usr(
         str::SetFailed + str::UsrSuffix);
 };
 
-
 bool QEnvVarPath::Success = true;
 bool QEnvVarPath::Failure = false;
 
-static bool setCore(/*in*/QStringList & strList, str::Info & tInfo) {
+static bool setCore(/*in*/const QStringList & strList, str::Info & tInfo) {
     HKEY key;
     LONG retval;
     DWORD dwBUFS = 0;
@@ -102,7 +101,7 @@ static bool getCore(/*out*/QStringList & strList, str::Info & tInfo) {
     LONG retval;
     DWORD dwType = REG_EXPAND_SZ;
     DWORD dwBUFS = LIMIT_REGISTRY_VALUE_LENGTH;
-    BYTE *buf = new BYTE[LIMIT_REGISTRY_VALUE_LENGTH];
+    BYTE * buf = new BYTE[LIMIT_REGISTRY_VALUE_LENGTH];
     QString retStrPath;
 
     retval = RegOpenKeyEx(tInfo.hKey, tInfo.pathRegEnv,
@@ -140,14 +139,15 @@ static bool getCore(/*out*/QStringList & strList, str::Info & tInfo) {
     return QEnvVarPath::Success;
 }
 
-bool QEnvVarPath::setSys(/*in*/QStringList & strList){
+bool QEnvVarPath::setSys(/*in*/const QStringList & strList){
     return setCore(strList, str::Sys);
 }
+
 bool QEnvVarPath::getSys(/*out*/QStringList & strList) {
     return getCore(strList, str::Sys);
 }
 
-bool QEnvVarPath::setUsr(/*in*/QStringList & strList) {
+bool QEnvVarPath::setUsr(/*in*/const QStringList & strList) {
     return setCore(strList, str::Usr);
 }
 

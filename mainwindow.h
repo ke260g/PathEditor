@@ -15,9 +15,9 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    void showAfter();
 
 private slots:
-
     void on_pushButton_sysGet_clicked();
 
     void on_pushButton_sysSave_clicked();
@@ -42,12 +42,29 @@ private slots:
 
     void on_pushButton_usrAddFromDir_clicked();
 
+    void on_pushButton_sysMoveUp_clicked();
+
+    void on_pushButton_sysMoveDown_clicked();
+
+    void on_pushButton_usrMoveup_clicked();
+
+    void on_pushButton_usrMoveDown_clicked();
+
+    void on_pushButton_sysRedo_clicked();
+
+    void on_pushButton_sysUndo_clicked();
+
+    void on_pushButton_usrRedo_clicked();
+
+    void on_pushButton_usrUndo_clicked();
+
 private:
     QPathList * sysPathList;
     QPathList * usrPathList;
     Ui::MainWindow *ui;
-    bool delItemConfirm(QString & item);
-    void getNewItemDir(QString & dir);
+    bool delItemConfirm(/*in*/const QString & item);
+    void getNewItemDir(/*out*/QString & dir);
+    void needAdminPrivileges(/*in*/const QString & mesg);
 };
 
 #endif // MAINWINDOW_H
