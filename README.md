@@ -1,4 +1,4 @@
-## PathEditor
+## PathEditor for Windows Written in Qt5
 ### Dowload
 Download the [latest beta](https://github.com/ke260g/PathEditor/releases/tag/Beta-1.2.0).
 
