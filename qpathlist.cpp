@@ -119,18 +119,18 @@ void QPathList::setAll(/*in*/const QStringList & strList) {
     exec();
 }
 
-void QPathList::getAll(/*out*/QStringList & strList) {
+void QPathList::getAll(/*out*/QStringList & strList) const {
     strList.clear();
     auto cnt = count();
     for(int i = 0; i < cnt; ++i)
         strList.append(item(i)->text());
 }
 
-void QPathList::getCurrentStr(/*out*/QString & item) { // get current select
+void QPathList::getCurrentStr(/*out*/QString & item) const { // get current select
     item = currentItem()->text();
 }
 
-void QPathList::toClipBoard() {
+void QPathList::toClipBoard() const {
     QStringList strList;
     getAll(strList);
     QApplication::clipboard()->setText(strList.join(';'));

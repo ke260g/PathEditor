@@ -13,9 +13,9 @@ public:
     ~QPathList();
 
     void setAll(/*in*/const QStringList & strList); // first time means init
-    void getAll(/*out*/QStringList & strList);
-    void getCurrentStr(/*out*/QString & str); // get current select
-    void toClipBoard();
+    void getAll(/*out*/QStringList & strList) const;
+    void getCurrentStr(/*out*/QString & str) const; // get current select
+    void toClipBoard() const;
 
     // action
     void addPathItem(/*in*/const QString str = "");
