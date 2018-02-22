@@ -14,7 +14,7 @@ Download the [latest beta](https://github.com/ke260g/PathEditor/releases/tag/Bet
 
 ---
 ## More Implement Details
-#### deploy details
+### deploy details
 + `$>_ windeployqt.exe --release <binary file>`
 + Windeployqt may not handle compiler-runtime-dlls friendly.
 + Compiler-runtime-dlls are also needed.
@@ -23,15 +23,15 @@ Download the [latest beta](https://github.com/ke260g/PathEditor/releases/tag/Bet
 + where to find compiler-runtime-dlls?
   `<VS2017 install dir>\VC\Tools\MSVC\14.11.25503\bin\Hostx64\x64`
 
-#### Data structure in ActionTracer to store action
+### Data structure in ActionTracer to store action
 + Firstly, it used rounded vector. </br>
   but it's not convinient for implementation.
 + Then, using unlimit-vector, as the memory is not very critical nowadays.
 
-#### value of Windows Environment Variable is using 'unicode-16' encoding
+### value of Windows Environment Variable is using 'unicode-16' encoding
 + it needs convert from string to unicode-16
 
-#### A special scenario in QPathList
+### A special scenario in QPathList
 + requirement 
   1. setAll(): ActionTracer-push
   2. undo(): call setAll **without** ActionTracer-push
