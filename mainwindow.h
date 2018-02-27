@@ -66,11 +66,7 @@ private:
     QPathList * sysPathList;
     QPathList * usrPathList;
 
-    bool delItemConfirm(/*in*/const QString & item);
-    void getNewItemDir(/*out*/QString & dir);
-    void needAdminPrivileges(/*in*/const QString & mesg);
-
-    class TipsDialog;
+    class Tips;
 
     // language supports
     class Language;

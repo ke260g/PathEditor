@@ -25,11 +25,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += main.cpp\
         mainwindow.cpp \
     qenvvarpath.cpp \
-    qpathlist.cpp
+    qpathlist.cpp \
+    win32uac.cpp
 
 HEADERS  += mainwindow.h \
     qenvvarpath.h \
-    qpathlist.h
+    qpathlist.h \
+    win32uac.h
 
 FORMS    += mainwindow.ui
 

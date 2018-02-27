@@ -1,11 +1,14 @@
 #include "mainwindow.h"
 #include <QApplication>
+#include "win32uac.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    MainWindow w;
 
+    WIN32UAC::elevate();
+
+    MainWindow w;
     w.show();
     w.showAfter();
 

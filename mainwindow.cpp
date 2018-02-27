@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 
 #include "qenvvarpath.h"
+#include "win32uac.h"
 
 #include <QDebug>
 
@@ -31,8 +32,7 @@ public:
         static QString name;
     };
 };
-QString MainWindow::Language::Chinese::name = "tr_zh";
-QString MainWindow::Language::English::name = "tr_en";
+// the same as translation files
 
 template<class Lang>
 void MainWindow::setLanguage() {
@@ -48,6 +48,18 @@ void MainWindow::setLanguage() {
     QCoreApplication::instance()->installTranslator(&translator);
     ui->retranslateUi(this);
     currentLanguage = Lang::name;
+};
+
+class MainWindow::Tips {
+private:
+    Tips();
+    ~Tips();
+
+public:
+    static bool delItemConfirm(QWidget *parent, /*in*/const QString & item);
+    static void getNewItemFromDir(QWidget *parent, /*out*/QString & item);
+    static void sysPathRWError(QWidget * parent, /*in*/QString & msg);
+    static void saveSucceeded(QWidget * parent);
 };
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -81,67 +93,91 @@ void MainWindow::showAfter() {
     on_pushButton_sysGet_clicked();
 }
 
-bool MainWindow::delItemConfirm(/*in*/const QString & item) {
+// Language
+QString MainWindow::Language::Chinese::name = "tr_zh";
+QString MainWindow::Language::English::name = "tr_en";
+
+// Tips implement
+bool MainWindow::Tips::delItemConfirm(QWidget *parent, /*in*/const QString & item) {
     QString title;
     QString tips;
     title = tr("Delete 'Path' Entry");
-    tips = tr("Are you sure to delete this 'Path' entry?\n");
+    tips = tr("Are you sure to delete this 'Path' entry?");
+    tips += '\n';
 
     if(item.isEmpty())
         tips += tr("This is an empty entry!");
     else
-        tips += tr("Entry: ") + item + tr("\nwill be deleted!");
+        tips += tr("Entry: ") + item + '\n' + tr("will be deleted!");
 
-    int ret = QMessageBox::warning(this, title, tips,
-                                   QMessageBox::Yes |
-                                   QMessageBox::Cancel,
-                                   QMessageBox::Cancel);
-    if(ret == QMessageBox::Yes)
+    int retval = QMessageBox::warning(parent, title, tips,
+                                      QMessageBox::Yes |
+                                      QMessageBox::Cancel,
+                                      QMessageBox::Cancel);
+    if(retval == QMessageBox::Yes)
         return true;
     else
         return false;
 }
 
-void MainWindow::getNewItemDir(/*out*/QString & dir) {
+void MainWindow::Tips::getNewItemFromDir(QWidget *parent, /*out*/QString & item) {
     QString strHomeDir = QDir::toNativeSeparators(QDir::home().path());
-    QString str = QFileDialog::getExistingDirectory(this, tr("Select Directory"),
+    QString str = QFileDialog::getExistingDirectory(parent, tr("Select Directory"),
                                                     strHomeDir,
                                                     QFileDialog::ShowDirsOnly |
                                                     QFileDialog::DontResolveSymlinks);
     // platform dir seperator compatition handle
-    dir = QDir::toNativeSeparators(str);
+    item = QDir::toNativeSeparators(str);
 }
 
-void MainWindow::needAdminPrivileges(/*in*/const QString & mesg) {
+void MainWindow::Tips::saveSucceeded(QWidget * parent) {
+    QMessageBox::information(parent, "", tr("Save") + ' '  + tr("Succeeded!"));
+}
+
+void MainWindow::Tips::sysPathRWError(QWidget * parent, /*in*/QString & msg) {
     QString title;
     QString tips;
     title = tr("Error");
-    tips = mesg;
-    tips += tr("\nAdministrative Privileges may be required!");
-    tips += tr("\nPlease re-run with Administrative Privileges");
-    QMessageBox::critical(this, title, tips);
+    tips = msg;
+    tips += '\n';
+    if(WIN32UAC::isRunAsAdmin() == false)
+        tips += tr("Administrative Privileges is needed");
+    else
+        tips += tr("Unkown") + ' ' + tr("Error");
+    QMessageBox::critical(parent, title, tips);
 }
 
 // sys buttons
 void MainWindow::on_pushButton_sysGet_clicked() {
+    QString ErrMsg = tr("Fetch") + ' ' + tr("Failed");
+    if(WIN32UAC::isRunAsAdmin() == false) {
+        Tips::sysPathRWError(this, ErrMsg);
+        return;
+    }
+
     QStringList strList;
     bool retval = QEnvVarPath::getSys(strList);
-
     if(retval == QEnvVarPath::Failure)
-        needAdminPrivileges("Can not access System Environment Variable 'Path'!");
+        Tips::sysPathRWError(this, ErrMsg);
     else
         sysPathList->setAll(strList);
 }
 
 void MainWindow::on_pushButton_sysSave_clicked() {
+    QString ErrMsg = tr("Save") + ' ' + tr("Failed");
+    if(WIN32UAC::isRunAsAdmin() == false) {
+        Tips::sysPathRWError(this, ErrMsg);
+        return;
+    }
+
     QStringList strList;
     sysPathList->getAll(strList);
 
     bool retval = QEnvVarPath::setSys(strList);
     if(retval == QEnvVarPath::Failure)
-        needAdminPrivileges("Can not save System Environment Variable 'Path'!");
+        Tips::sysPathRWError(this, ErrMsg);
     else
-        sysPathList->setAll(strList);
+        Tips::saveSucceeded(this);
 }
 
 void MainWindow::on_pushButton_sysDel_clicked() {
@@ -149,7 +185,7 @@ void MainWindow::on_pushButton_sysDel_clicked() {
         return;
     QString str;
     sysPathList->getCurrentStr(str);
-    if(delItemConfirm(str))
+    if(Tips::delItemConfirm(this, str))
         sysPathList->delPathItem();
 }
 
@@ -163,16 +199,9 @@ void MainWindow::on_pushButton_sysAdd_clicked() {
 
 void MainWindow::on_pushButton_sysAddFromDir_clicked() {
     QString str;
-    getNewItemDir(str);
+    Tips::getNewItemFromDir(this, str);
     if(!str.isEmpty())
         sysPathList->addPathItem(str);
-}
-
-void MainWindow::on_pushButton_usrAddFromDir_clicked() {
-    QString str;
-    getNewItemDir(str);
-    if(!str.isEmpty())
-        usrPathList->addPathItem(str);
 }
 
 void MainWindow::on_pushButton_sysMoveUp_clicked() {
@@ -202,6 +231,7 @@ void MainWindow::on_pushButton_usrSave_clicked() {
     QStringList strList;
     usrPathList->getAll(strList);
     QEnvVarPath::setUsr(strList);
+    Tips::saveSucceeded(this);
 }
 
 void MainWindow::on_pushButton_usrDel_clicked() {
@@ -209,7 +239,7 @@ void MainWindow::on_pushButton_usrDel_clicked() {
         return;
     QString item;
     usrPathList->getCurrentStr(item);
-    if(delItemConfirm(item))
+    if(Tips::delItemConfirm(this, item))
         usrPathList->delPathItem();
 }
 
@@ -219,6 +249,13 @@ void MainWindow::on_pushButton_usrToClipBoard_clicked() {
 
 void MainWindow::on_pushButton_usrAdd_clicked() {
     usrPathList->addPathItem();
+}
+
+void MainWindow::on_pushButton_usrAddFromDir_clicked() {
+    QString str;
+    Tips::getNewItemFromDir(this, str);
+    if(!str.isEmpty())
+        usrPathList->addPathItem(str);
 }
 
 void MainWindow::on_pushButton_usrMoveup_clicked() {
