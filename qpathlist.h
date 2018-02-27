@@ -1,10 +1,8 @@
 #ifndef QPATHLIST_H
 #define QPATHLIST_H
 
-#include <QWidget>
 #include <QStringList>
 #include <QListWidget>
-
 
 class QPathList : public QListWidget {
     Q_OBJECT
