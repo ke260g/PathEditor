@@ -9,7 +9,6 @@ private:
     WIN32UAC();
     ~WIN32UAC();
 public:
-    static void f();
     static bool isRunAsAdmin();
     static bool elevate();
 };
