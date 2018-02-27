@@ -140,9 +140,11 @@ void MainWindow::Tips::sysPathRWError(QWidget * parent, /*in*/QString & msg) {
     title = tr("Error");
     tips = msg;
     tips += '\n';
-    if(WIN32UAC::isRunAsAdmin() == false)
-        tips += tr("Administrative Privileges is needed");
-    else
+    if(WIN32UAC::isRunAsAdmin() == false) {
+        tips += tr("Administrative Privileges is needed.\n"
+                   "Re-run the program with Administrative Privileges.\n"
+                   "Or say yes when ask for Administrative Privileges at the beginning.");
+    } else
         tips += tr("Unkown") + ' ' + tr("Error");
     QMessageBox::critical(parent, title, tips);
 }
