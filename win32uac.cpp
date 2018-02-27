@@ -117,7 +117,7 @@ Cleanup:
 }
 
 
-bool WIN32UAC::elevate() {
+void WIN32UAC::elevate() {
     // Check the current process's "run as administrator" status.
     BOOL fIsRunAsAdmin;
     try
@@ -150,7 +150,6 @@ bool WIN32UAC::elevate() {
                 {
                     qDebug() << "elevate: ERROR_CANCELLED";
                 }
-                return false;
             }
             else
                 EndDialog(hWnd, TRUE);  // Quit itself
