@@ -212,7 +212,10 @@ void QPathList::undo() {
         mActionTracer->lock();
         setAll(strList);
         mActionTracer->unlock();
+
         setCurrentRow(row);
+
+        emit newModification();
     }
 }
 
@@ -225,6 +228,8 @@ void QPathList::redo() {
         mActionTracer->unlock();
 
         setCurrentRow(row);
+
+        emit newModification();
     }
 }
 
@@ -244,4 +249,6 @@ void QPathList::exec() {
     getAll(strList);
 
     mActionTracer->doPush(strList, row);
+
+    emit newModification();
 }

@@ -23,6 +23,9 @@ public:
     void undo();
     void redo();
 
+signals:
+    void newModification();
+
 private:
     class color;
 
