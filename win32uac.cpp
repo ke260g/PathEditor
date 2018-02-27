@@ -120,6 +120,7 @@ Cleanup:
 void WIN32UAC::elevate() {
     // Check the current process's "run as administrator" status.
     BOOL fIsRunAsAdmin;
+    HWND mHWND = GetActiveWindow();
     try
     {
         fIsRunAsAdmin = WIN32UAC::isRunAsAdmin();
@@ -127,7 +128,6 @@ void WIN32UAC::elevate() {
     catch (DWORD dwError)
     {
         qDebug() << "Error: isRunAsAdmin() " << dwError;
-        return false;
     }
 
     // Elevate the process if it is not run as administrator.
@@ -140,7 +140,7 @@ void WIN32UAC::elevate() {
             SHELLEXECUTEINFO sei = { sizeof(sei) };
             sei.lpVerb = L"runas";
             sei.lpFile = szPath;
-            sei.hwnd = GetActiveWindow();
+            sei.hwnd = mHWND;
             sei.nShow = SW_NORMAL;
 
             if (!ShellExecuteEx(&sei))
@@ -152,8 +152,7 @@ void WIN32UAC::elevate() {
                 }
             }
             else
-                EndDialog(hWnd, TRUE);  // Quit itself
+                EndDialog(mHWND, TRUE);  // Quit itself
         }
     }
-    return true;
 }
