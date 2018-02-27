@@ -274,7 +274,7 @@ public:
 
     void retranslateUi(QMainWindow *MainWindow)
     {
-        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", Q_NULLPTR));
+        MainWindow->setWindowTitle(QApplication::translate("MainWindow", "PathEditor", Q_NULLPTR));
         actionEnglish->setText(QApplication::translate("MainWindow", "English", Q_NULLPTR));
         actionChinese->setText(QApplication::translate("MainWindow", "Chinese", Q_NULLPTR));
         pushButton_sysAdd->setText(QApplication::translate("MainWindow", "Add", Q_NULLPTR));

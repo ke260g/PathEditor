@@ -7,4 +7,4 @@ moc_*
 *.obj
 *.exe
 *.dll
-*.ts
+*.qm

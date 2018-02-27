@@ -173,7 +173,7 @@ void MainWindow::Tips::sysPathRWError(QWidget * parent, /*in*/QString & msg) {
 }
 
 void MainWindow::Tips::saveSucceeded(QWidget * parent) {
-    QMessageBox::information(parent, "", tr("Save") + ' '  + tr("Succeeded!"));
+    QMessageBox::information(parent, "", tr("Save Succeeded"));
 }
 
 void MainWindow::usrOnNewModification() {
@@ -203,7 +203,7 @@ void MainWindow::on_pushButton_sysGet_clicked() {
 }
 
 void MainWindow::on_pushButton_sysSave_clicked() {
-    QString ErrMsg = tr("Save") + ' ' + tr("Failed");
+    QString ErrMsg = tr("Save Failed");
     if(WIN32UAC::isRunAsAdmin() == false) {
         Tips::sysPathRWError(this, ErrMsg);
         return;
