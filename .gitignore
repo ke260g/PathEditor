@@ -6,3 +6,5 @@ Makefile*
 moc_*
 *.obj
 *.exe
+*.dll
+*.ts
