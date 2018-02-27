@@ -12,5 +12,4 @@ public:
     static bool isRunAsAdmin();
     static bool elevate();
 };
-void g();
 #endif // WIN32UAC_H
