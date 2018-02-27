@@ -5,6 +5,7 @@
 
 #include <QMainWindow>
 #include <QTranslator>
+#include <QCloseEvent>
 
 namespace Ui {
 class MainWindow;
@@ -61,11 +62,19 @@ private slots:
     void on_pushButton_usrUndo_clicked();
 
 private:
-    Ui::MainWindow *ui;
+    Ui::MainWindow * ui;
+
+    void closeEvent(QCloseEvent * event);
 
     QPathList * sysPathList;
     QPathList * usrPathList;
 
+    bool usrIsSaved;
+    bool sysIsSaved;
+    void usrOnNewModification();
+    void sysOnNewModification();
+
+    // Tips
     class Tips;
 
     // language supports

@@ -66,7 +66,9 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow) {
     ui->setupUi(this);
+
     setLanguage<Language::English>();
+
 
     connect(ui->actionChinese, &QAction::triggered,
             this, &MainWindow::setLanguage<Language::Chinese>);
@@ -76,10 +78,14 @@ MainWindow::MainWindow(QWidget *parent) :
     // usr
     usrPathList = new QPathList();
     ui->gridLayout->addWidget(usrPathList, 4, 5, 1, 4);
+    connect(usrPathList, &QPathList::newModification,
+            this, &MainWindow::usrOnNewModification);
 
     // sys
     sysPathList = new QPathList();
     ui->gridLayout->addWidget(sysPathList, 4, 0, 1, 4);
+    connect(sysPathList, &QPathList::newModification,
+            this, &MainWindow::sysOnNewModification);
 }
 
 MainWindow::~MainWindow() {
@@ -91,7 +97,28 @@ MainWindow::~MainWindow() {
 void MainWindow::showAfter() {
     on_pushButton_usrGet_clicked();
     on_pushButton_sysGet_clicked();
+
+    usrIsSaved = true;
+    ui->usrLogBar->setText("");
+
+    sysIsSaved = true;
+    ui->sysLogBar->setText("");
 }
+
+void MainWindow::closeEvent(QCloseEvent * event) {
+    if(usrIsSaved || sysIsSaved)
+        event->accept();
+    QString title = tr("Close Confirmation");
+    QString tips = tr("Modification is not saved\n"
+                      "Are you sure you want to exit?");
+    int retval = QMessageBox::question(this, title,  tips,
+                                       QMessageBox::Yes|QMessageBox::No,
+                                       QMessageBox::No);
+    if (retval == QMessageBox::Yes)
+        event->accept();
+    else
+        event->ignore();
+};
 
 // Language
 QString MainWindow::Language::Chinese::name = "tr_zh";
@@ -130,10 +157,6 @@ void MainWindow::Tips::getNewItemFromDir(QWidget *parent, /*out*/QString & item)
     item = QDir::toNativeSeparators(str);
 }
 
-void MainWindow::Tips::saveSucceeded(QWidget * parent) {
-    QMessageBox::information(parent, "", tr("Save") + ' '  + tr("Succeeded!"));
-}
-
 void MainWindow::Tips::sysPathRWError(QWidget * parent, /*in*/QString & msg) {
     QString title;
     QString tips;
@@ -147,6 +170,20 @@ void MainWindow::Tips::sysPathRWError(QWidget * parent, /*in*/QString & msg) {
     } else
         tips += tr("Unkown") + ' ' + tr("Error");
     QMessageBox::critical(parent, title, tips);
+}
+
+void MainWindow::Tips::saveSucceeded(QWidget * parent) {
+    QMessageBox::information(parent, "", tr("Save") + ' '  + tr("Succeeded!"));
+}
+
+void MainWindow::usrOnNewModification() {
+    usrIsSaved = false;
+    ui->usrLogBar->setText(tr("Modification is not saved"));
+}
+
+void MainWindow::sysOnNewModification() {
+    sysIsSaved = false;
+    ui->sysLogBar->setText(tr("Modification is not saved"));
 }
 
 // sys buttons
@@ -178,8 +215,11 @@ void MainWindow::on_pushButton_sysSave_clicked() {
     bool retval = QEnvVarPath::setSys(strList);
     if(retval == QEnvVarPath::Failure)
         Tips::sysPathRWError(this, ErrMsg);
-    else
+    else {
+        sysIsSaved = true;
+        ui->sysLogBar->setText("");
         Tips::saveSucceeded(this);
+    }
 }
 
 void MainWindow::on_pushButton_sysDel_clicked() {
@@ -233,6 +273,9 @@ void MainWindow::on_pushButton_usrSave_clicked() {
     QStringList strList;
     usrPathList->getAll(strList);
     QEnvVarPath::setUsr(strList);
+
+    ui->usrLogBar->setText("");
+    usrIsSaved = true;
     Tips::saveSucceeded(this);
 }
 
