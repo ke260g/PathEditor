@@ -1,5 +1,25 @@
 #include "win32uac.h"
 
+/****************************** Module Header ******************************\
+Module Name:  CppUACSelfElevation.cpp
+Project:      CppUACSelfElevation
+Copyright (c) Microsoft Corporation.
+
+User Account Control (UAC) is a new security component in Windows Vista and
+newer operating systems. With UAC fully enabled, interactive administrators
+normally run with least user privileges. This example demonstrates how to
+check the privilege level of the current process, and how to self-elevate
+the process by giving explicit consent with the Consent UI.
+
+This source is subject to the Microsoft Public License.
+See http://www.microsoft.com/en-us/openness/resources/licenses.aspx#MPL.
+All other rights reserved.
+
+THIS CODE AND INFORMATION IS PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
+EITHER EXPRESSED OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND/OR FITNESS FOR A PARTICULAR PURPOSE.
+\***************************************************************************/
+
 #include <windows.h>
 #include <windowsx.h>
 #include <strsafe.h>
@@ -133,7 +153,7 @@ bool WIN32UAC::elevate() {
                 return false;
             }
             else
-                return true;
+                EndDialog(hWnd, TRUE);  // Quit itself
         }
     }
     return true;
