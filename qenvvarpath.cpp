@@ -12,10 +12,6 @@
 
 #define LIMIT_REGISTRY_VALUE_LENGTH 16383 // refer to msdn, win32 api
 
-QEnvVarPath::QEnvVarPath() {  }
-
-QEnvVarPath::~QEnvVarPath() {  }
-
 namespace str {
 
 class Info {
