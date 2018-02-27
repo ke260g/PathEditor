@@ -32,3 +32,11 @@ HEADERS  += mainwindow.h \
     qpathlist.h
 
 FORMS    += mainwindow.ui
+
+RESOURCES += \
+    translations.qrc
+
+TRANSLATIONS += translations/tr_zh.ts
+TRANSLATIONS += translations/tr_en.ts
+
+

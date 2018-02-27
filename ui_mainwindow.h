@@ -18,6 +18,7 @@
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QMainWindow>
+#include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QStatusBar>
@@ -29,6 +30,8 @@ QT_BEGIN_NAMESPACE
 class Ui_MainWindow
 {
 public:
+    QAction *actionEnglish;
+    QAction *actionChinese;
     QWidget *centralWidget;
     QGridLayout *gridLayout_2;
     QGridLayout *gridLayout;
@@ -62,6 +65,7 @@ public:
     QWidget *usrPathList;
     QLabel *sysLogBar;
     QMenuBar *menuBar;
+    QMenu *menuLanguage;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
 
@@ -70,6 +74,10 @@ public:
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName(QStringLiteral("MainWindow"));
         MainWindow->resize(720, 697);
+        actionEnglish = new QAction(MainWindow);
+        actionEnglish->setObjectName(QStringLiteral("actionEnglish"));
+        actionChinese = new QAction(MainWindow);
+        actionChinese->setObjectName(QStringLiteral("actionChinese"));
         centralWidget = new QWidget(MainWindow);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         centralWidget->setMinimumSize(QSize(720, 640));
@@ -244,6 +252,9 @@ public:
         menuBar = new QMenuBar(MainWindow);
         menuBar->setObjectName(QStringLiteral("menuBar"));
         menuBar->setGeometry(QRect(0, 0, 720, 23));
+        menuBar->setDefaultUp(false);
+        menuLanguage = new QMenu(menuBar);
+        menuLanguage->setObjectName(QStringLiteral("menuLanguage"));
         MainWindow->setMenuBar(menuBar);
         mainToolBar = new QToolBar(MainWindow);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
@@ -251,6 +262,10 @@ public:
         statusBar = new QStatusBar(MainWindow);
         statusBar->setObjectName(QStringLiteral("statusBar"));
         MainWindow->setStatusBar(statusBar);
+
+        menuBar->addAction(menuLanguage->menuAction());
+        menuLanguage->addAction(actionEnglish);
+        menuLanguage->addAction(actionChinese);
 
         retranslateUi(MainWindow);
 
@@ -260,30 +275,33 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", Q_NULLPTR));
-        pushButton_sysAdd->setText(QApplication::translate("MainWindow", "\346\267\273\345\212\240", Q_NULLPTR));
-        pushButton_sysBundle->setText(QApplication::translate("MainWindow", "\346\211\271\351\207\217 \345\276\205\345\256\236\347\216\260", Q_NULLPTR));
-        pushButton_sysAddFromDir->setText(QApplication::translate("MainWindow", "\346\265\217\350\247\210-\346\267\273\345\212\240", Q_NULLPTR));
-        pushButton_usrGet->setText(QApplication::translate("MainWindow", "\350\216\267\345\217\226", Q_NULLPTR));
-        pushButton_usrToClipBoard->setText(QApplication::translate("MainWindow", "\345\257\274\345\207\272\345\210\260\345\211\252\345\210\207\346\235\277", Q_NULLPTR));
-        pushButton_usrDel->setText(QApplication::translate("MainWindow", "\345\210\240\351\231\244", Q_NULLPTR));
-        pushButton_usrBundle->setText(QApplication::translate("MainWindow", "\346\211\271\351\207\217 \345\276\205\345\256\236\347\216\260", Q_NULLPTR));
-        pushButton_sysMoveUp->setText(QApplication::translate("MainWindow", "\344\270\212\347\247\273", Q_NULLPTR));
-        pushButton_sysRedo->setText(QApplication::translate("MainWindow", "\351\207\215\345\201\232", Q_NULLPTR));
-        pushButton_sysSave->setText(QApplication::translate("MainWindow", "\344\277\235\345\255\230", Q_NULLPTR));
-        pushButton_sysUndo->setText(QApplication::translate("MainWindow", "\346\222\244\351\224\200", Q_NULLPTR));
-        pushButton_sysMoveDown->setText(QApplication::translate("MainWindow", "\344\270\213\347\247\273", Q_NULLPTR));
-        pushButton_sysGet->setText(QApplication::translate("MainWindow", "\350\216\267\345\217\226", Q_NULLPTR));
-        pushButton_sysToClipBoard->setText(QApplication::translate("MainWindow", "\345\257\274\345\207\272\345\210\260\345\211\252\345\210\207\346\235\277", Q_NULLPTR));
-        pushButton_usrSave->setText(QApplication::translate("MainWindow", "\344\277\235\345\255\230", Q_NULLPTR));
-        pushButton_usrMoveDown->setText(QApplication::translate("MainWindow", "\344\270\213\347\247\273", Q_NULLPTR));
-        pushButton_usrMoveup->setText(QApplication::translate("MainWindow", "\344\270\212\347\247\273", Q_NULLPTR));
-        pushButton_sysDel->setText(QApplication::translate("MainWindow", "\345\210\240\351\231\244", Q_NULLPTR));
-        pushButton_usrAddFromDir->setText(QApplication::translate("MainWindow", "\346\265\217\350\247\210-\346\267\273\345\212\240", Q_NULLPTR));
-        pushButton_usrAdd->setText(QApplication::translate("MainWindow", "\346\267\273\345\212\240", Q_NULLPTR));
-        pushButton_usrRedo->setText(QApplication::translate("MainWindow", "\351\207\215\345\201\232", Q_NULLPTR));
-        pushButton_usrUndo->setText(QApplication::translate("MainWindow", "\346\222\244\351\224\200", Q_NULLPTR));
+        actionEnglish->setText(QApplication::translate("MainWindow", "English", Q_NULLPTR));
+        actionChinese->setText(QApplication::translate("MainWindow", "Chinese", Q_NULLPTR));
+        pushButton_sysAdd->setText(QApplication::translate("MainWindow", "Add", Q_NULLPTR));
+        pushButton_sysBundle->setText(QApplication::translate("MainWindow", "Bundle(x)", Q_NULLPTR));
+        pushButton_sysAddFromDir->setText(QApplication::translate("MainWindow", "Add From Dir", Q_NULLPTR));
+        pushButton_usrGet->setText(QApplication::translate("MainWindow", "Fetch", Q_NULLPTR));
+        pushButton_usrToClipBoard->setText(QApplication::translate("MainWindow", "ToClipborad", Q_NULLPTR));
+        pushButton_usrDel->setText(QApplication::translate("MainWindow", "Delete", Q_NULLPTR));
+        pushButton_usrBundle->setText(QApplication::translate("MainWindow", "Bundle(x)", Q_NULLPTR));
+        pushButton_sysMoveUp->setText(QApplication::translate("MainWindow", "Move Up", Q_NULLPTR));
+        pushButton_sysRedo->setText(QApplication::translate("MainWindow", "Redo", Q_NULLPTR));
+        pushButton_sysSave->setText(QApplication::translate("MainWindow", "Save", Q_NULLPTR));
+        pushButton_sysUndo->setText(QApplication::translate("MainWindow", "Undo", Q_NULLPTR));
+        pushButton_sysMoveDown->setText(QApplication::translate("MainWindow", "Move Down", Q_NULLPTR));
+        pushButton_sysGet->setText(QApplication::translate("MainWindow", "Fetch", Q_NULLPTR));
+        pushButton_sysToClipBoard->setText(QApplication::translate("MainWindow", "ToClipborad", Q_NULLPTR));
+        pushButton_usrSave->setText(QApplication::translate("MainWindow", "Save", Q_NULLPTR));
+        pushButton_usrMoveDown->setText(QApplication::translate("MainWindow", "Move Down", Q_NULLPTR));
+        pushButton_usrMoveup->setText(QApplication::translate("MainWindow", "Move Up", Q_NULLPTR));
+        pushButton_sysDel->setText(QApplication::translate("MainWindow", "Delete", Q_NULLPTR));
+        pushButton_usrAddFromDir->setText(QApplication::translate("MainWindow", "Add From Dir", Q_NULLPTR));
+        pushButton_usrAdd->setText(QApplication::translate("MainWindow", "Add", Q_NULLPTR));
+        pushButton_usrRedo->setText(QApplication::translate("MainWindow", "Redo", Q_NULLPTR));
+        pushButton_usrUndo->setText(QApplication::translate("MainWindow", "Undo", Q_NULLPTR));
         usrLogBar->setText(QString());
         sysLogBar->setText(QString());
+        menuLanguage->setTitle(QApplication::translate("MainWindow", "Language", Q_NULLPTR));
     } // retranslateUi
 
 };

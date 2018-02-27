@@ -1,8 +1,10 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
 #include "qpathlist.h"
+
+#include <QMainWindow>
+#include <QTranslator>
 
 namespace Ui {
 class MainWindow;
@@ -59,12 +61,22 @@ private slots:
     void on_pushButton_usrUndo_clicked();
 
 private:
+    Ui::MainWindow *ui;
+
     QPathList * sysPathList;
     QPathList * usrPathList;
-    Ui::MainWindow *ui;
+
     bool delItemConfirm(/*in*/const QString & item);
     void getNewItemDir(/*out*/QString & dir);
     void needAdminPrivileges(/*in*/const QString & mesg);
+
+    class TipsDialog;
+
+    // language supports
+    class Language;
+    template<class Lang> void setLanguage();
+    QString currentLanguage;
+    QTranslator translator;
 };
 
 #endif // MAINWINDOW_H

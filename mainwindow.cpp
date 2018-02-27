@@ -2,28 +2,72 @@
 #include "ui_mainwindow.h"
 
 #include "qenvvarpath.h"
+
 #include <QDebug>
 
 #include <QMessageBox>
 #include <QFileDialog>
+#include <QFile>
 #include <QDir>
+
+#include <QCoreApplication>
+
+// Language
+class MainWindow::Language {
+    Q_OBJECT
+    // not allow to instantialize
+private:
+    Language();
+    ~Language();
+
+public:
+    class Chinese {
+    public:
+        static QString name;
+    };
+
+    class English {
+    public:
+        static QString name;
+    };
+};
+QString MainWindow::Language::Chinese::name = "tr_zh";
+QString MainWindow::Language::English::name = "tr_en";
+
+template<class Lang>
+void MainWindow::setLanguage() {
+    if(currentLanguage == Lang::name)
+        return;
+
+    QString basename = QString(":/translations/") + Lang::name;
+    QString fullname = basename + QString(".qm");
+    if(QFile::exists(fullname) == false)
+        return;
+
+    translator.load(basename);
+    QCoreApplication::instance()->installTranslator(&translator);
+    ui->retranslateUi(this);
+    currentLanguage = Lang::name;
+};
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow) {
     ui->setupUi(this);
+    setLanguage<Language::English>();
 
-    QStringList strList;
-    // sys
-    sysPathList = new QPathList();
-    ui->gridLayout->addWidget(sysPathList, 4, 0, 1, 4);
-    on_pushButton_sysGet_clicked();
+    connect(ui->actionChinese, &QAction::triggered,
+            this, &MainWindow::setLanguage<Language::Chinese>);
+    connect(ui->actionEnglish, &QAction::triggered,
+            this, &MainWindow::setLanguage<Language::English>);
 
     // usr
     usrPathList = new QPathList();
     ui->gridLayout->addWidget(usrPathList, 4, 5, 1, 4);
-    on_pushButton_usrGet_clicked();
 
+    // sys
+    sysPathList = new QPathList();
+    ui->gridLayout->addWidget(sysPathList, 4, 0, 1, 4);
 }
 
 MainWindow::~MainWindow() {
@@ -33,31 +77,25 @@ MainWindow::~MainWindow() {
 }
 
 void MainWindow::showAfter() {
-    // message before everything
-    QString title;
-    QString tips;
-    title = "Info";
-    tips = tr("Operations will not be saved automatically.\n");
-    tips += tr("Ensure the content is what you need after modification.\n");
-    tips += tr("Then click the save button manually.\n");
-    QMessageBox::information(this, title, tips);
+    on_pushButton_usrGet_clicked();
+    on_pushButton_sysGet_clicked();
 }
 
 bool MainWindow::delItemConfirm(/*in*/const QString & item) {
     QString title;
     QString tips;
     title = tr("Delete 'Path' Entry");
-    tips = tr("Do you want to delete this 'Path' entry ?\n");
+    tips = tr("Are you sure to delete this 'Path' entry?\n");
 
     if(item.isEmpty())
-        tips += "This is an empty entry!";
+        tips += tr("This is an empty entry!");
     else
         tips += tr("Entry: ") + item + tr("\nwill be deleted!");
 
     int ret = QMessageBox::warning(this, title, tips,
-                                    QMessageBox::Yes |
-                                    QMessageBox::Cancel,
-                                    QMessageBox::Cancel);
+                                   QMessageBox::Yes |
+                                   QMessageBox::Cancel,
+                                   QMessageBox::Cancel);
     if(ret == QMessageBox::Yes)
         return true;
     else
@@ -66,7 +104,7 @@ bool MainWindow::delItemConfirm(/*in*/const QString & item) {
 
 void MainWindow::getNewItemDir(/*out*/QString & dir) {
     QString strHomeDir = QDir::toNativeSeparators(QDir::home().path());
-    QString str = QFileDialog::getExistingDirectory(this, tr("Open Directory"),
+    QString str = QFileDialog::getExistingDirectory(this, tr("Select Directory"),
                                                     strHomeDir,
                                                     QFileDialog::ShowDirsOnly |
                                                     QFileDialog::DontResolveSymlinks);
@@ -77,7 +115,7 @@ void MainWindow::getNewItemDir(/*out*/QString & dir) {
 void MainWindow::needAdminPrivileges(/*in*/const QString & mesg) {
     QString title;
     QString tips;
-    title = tr("Error Message");
+    title = tr("Error");
     tips = mesg;
     tips += tr("\nAdministrative Privileges may be required!");
     tips += tr("\nPlease re-run with Administrative Privileges");

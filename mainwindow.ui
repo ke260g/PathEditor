@@ -26,14 +26,14 @@
       <item row="2" column="0">
        <widget class="QPushButton" name="pushButton_sysAdd">
         <property name="text">
-         <string>添加</string>
+         <string>Add</string>
         </property>
        </widget>
       </item>
       <item row="0" column="2">
        <widget class="QPushButton" name="pushButton_sysBundle">
         <property name="text">
-         <string>批量 待实现</string>
+         <string>Bundle(x)</string>
         </property>
        </widget>
       </item>
@@ -47,70 +47,70 @@
       <item row="2" column="1">
        <widget class="QPushButton" name="pushButton_sysAddFromDir">
         <property name="text">
-         <string>浏览-添加</string>
+         <string>Add From Dir</string>
         </property>
        </widget>
       </item>
       <item row="0" column="5">
        <widget class="QPushButton" name="pushButton_usrGet">
         <property name="text">
-         <string>获取</string>
+         <string>Fetch</string>
         </property>
        </widget>
       </item>
       <item row="0" column="8">
        <widget class="QPushButton" name="pushButton_usrToClipBoard">
         <property name="text">
-         <string>导出到剪切板</string>
+         <string>ToClipborad</string>
         </property>
        </widget>
       </item>
       <item row="1" column="6">
        <widget class="QPushButton" name="pushButton_usrDel">
         <property name="text">
-         <string>删除</string>
+         <string>Delete</string>
         </property>
        </widget>
       </item>
       <item row="0" column="7">
        <widget class="QPushButton" name="pushButton_usrBundle">
         <property name="text">
-         <string>批量 待实现</string>
+         <string>Bundle(x)</string>
         </property>
        </widget>
       </item>
       <item row="1" column="2">
        <widget class="QPushButton" name="pushButton_sysMoveUp">
         <property name="text">
-         <string>上移</string>
+         <string>Move Up</string>
         </property>
        </widget>
       </item>
       <item row="2" column="2">
        <widget class="QPushButton" name="pushButton_sysRedo">
         <property name="text">
-         <string>重做</string>
+         <string>Redo</string>
         </property>
        </widget>
       </item>
       <item row="0" column="1">
        <widget class="QPushButton" name="pushButton_sysSave">
         <property name="text">
-         <string>保存</string>
+         <string>Save</string>
         </property>
        </widget>
       </item>
       <item row="2" column="3">
        <widget class="QPushButton" name="pushButton_sysUndo">
         <property name="text">
-         <string>撤销</string>
+         <string>Undo</string>
         </property>
        </widget>
       </item>
       <item row="1" column="3">
        <widget class="QPushButton" name="pushButton_sysMoveDown">
         <property name="text">
-         <string>下移</string>
+         <string>Move Down</string>
         </property>
        </widget>
       </item>
@@ -124,70 +124,70 @@
       <item row="0" column="0">
        <widget class="QPushButton" name="pushButton_sysGet">
         <property name="text">
-         <string>获取</string>
+         <string>Fetch</string>
         </property>
        </widget>
       </item>
       <item row="0" column="3">
        <widget class="QPushButton" name="pushButton_sysToClipBoard">
         <property name="text">
-         <string>导出到剪切板</string>
+         <string>ToClipborad</string>
         </property>
        </widget>
       </item>
       <item row="0" column="6">
        <widget class="QPushButton" name="pushButton_usrSave">
         <property name="text">
-         <string>保存</string>
+         <string>Save</string>
         </property>
        </widget>
       </item>
       <item row="1" column="8">
        <widget class="QPushButton" name="pushButton_usrMoveDown">
         <property name="text">
-         <string>下移</string>
+         <string>Move Down</string>
         </property>
        </widget>
       </item>
       <item row="1" column="7">
        <widget class="QPushButton" name="pushButton_usrMoveup">
         <property name="text">
-         <string>上移</string>
+         <string>Move Up</string>
         </property>
        </widget>
       </item>
       <item row="1" column="1">
        <widget class="QPushButton" name="pushButton_sysDel">
         <property name="text">
-         <string>删除</string>
+         <string>Delete</string>
         </property>
        </widget>
       </item>
       <item row="2" column="6">
        <widget class="QPushButton" name="pushButton_usrAddFromDir">
         <property name="text">
-         <string>浏览-添加</string>
+         <string>Add From Dir</string>
         </property>
        </widget>
       </item>
       <item row="2" column="5">
        <widget class="QPushButton" name="pushButton_usrAdd">
         <property name="text">
-         <string>添加</string>
+         <string>Add</string>
         </property>
        </widget>
       </item>
       <item row="2" column="7">
        <widget class="QPushButton" name="pushButton_usrRedo">
         <property name="text">
-         <string>重做</string>
+         <string>Redo</string>
         </property>
        </widget>
       </item>
       <item row="2" column="8">
        <widget class="QPushButton" name="pushButton_usrUndo">
         <property name="text">
-         <string>撤销</string>
+         <string>Undo</string>
         </property>
        </widget>
       </item>
@@ -249,6 +249,17 @@
      <height>23</height>
     </rect>
    </property>
+   <property name="defaultUp">
+    <bool>false</bool>
+   </property>
+   <widget class="QMenu" name="menuLanguage">
+    <property name="title">
+     <string>Language</string>
+    </property>
+    <addaction name="actionEnglish"/>
+    <addaction name="actionChinese"/>
+   </widget>
+   <addaction name="menuLanguage"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
    <attribute name="toolBarArea">
@@ -259,6 +270,16 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionEnglish">
+   <property name="text">
+    <string>English</string>
+   </property>
+  </action>
+  <action name="actionChinese">
+   <property name="text">
+    <string>Chinese</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>
