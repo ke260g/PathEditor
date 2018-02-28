@@ -87,6 +87,11 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->gridLayout->addWidget(sysPathList, 4, 0, 1, 4);
     connect(sysPathList, &QPathList::newModification,
             this, &MainWindow::sysUnSaved);
+
+    usrDoSaved();
+    sysDoSaved();
+
+    hasInit = false;
 }
 
 MainWindow::~MainWindow() {
@@ -98,11 +103,14 @@ MainWindow::~MainWindow() {
 void MainWindow::showAfter() {
     // usrGet should be called before sysGet
     // as sysGet may need Administrative Privileges
-    on_pushButton_usrGet_clicked();
+
     on_pushButton_sysGet_clicked();
+    on_pushButton_usrGet_clicked();
 
     usrDoSaved();
     sysDoSaved();
+
+    hasInit = true;
 }
 
 void MainWindow::mUpdate() {
@@ -116,8 +124,10 @@ void MainWindow::mUpdate() {
 }
 
 void MainWindow::closeEvent(QCloseEvent * event) {
-    if(usrIsSaved && sysIsSaved)
+    if(usrIsSaved && sysIsSaved) {
         event->accept();
+        return;
+    }
     QString title = tr("Close Confirmation");
     QString tips = tr("Modification is not saved\n"
                       "Are you sure you want to exit?");
@@ -206,7 +216,8 @@ void MainWindow::usrDoSaved() {
 void MainWindow::on_pushButton_sysGet_clicked() {
     QString ErrMsg = tr("Fetch") + ' ' + tr("Failed");
     if(WIN32UAC::isRunAsAdmin() == false) {
-        Tips::sysPathRWError(this, ErrMsg);
+        if(hasInit)
+            Tips::sysPathRWError(this, ErrMsg);
         return;
     }
 

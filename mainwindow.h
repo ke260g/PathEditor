@@ -67,6 +67,8 @@ private:
     void mUpdate();
     void closeEvent(QCloseEvent * event);
 
+    bool hasInit;
+
     QPathList * sysPathList;
     QPathList * usrPathList;
 
