@@ -35,35 +35,35 @@ public:
     QWidget *centralWidget;
     QGridLayout *gridLayout_2;
     QGridLayout *gridLayout;
-    QPushButton *pushButton_sysAdd;
-    QPushButton *pushButton_sysBundle;
+    QLabel *usrLogBar;
+    QWidget *usrPathList;
+    QLabel *sysLogBar;
+    QPushButton *pushButton_sysRedo;
     QFrame *line_2;
-    QPushButton *pushButton_sysAddFromDir;
     QPushButton *pushButton_usrGet;
     QPushButton *pushButton_usrToClipBoard;
     QPushButton *pushButton_usrDel;
-    QPushButton *pushButton_usrBundle;
-    QPushButton *pushButton_sysMoveUp;
-    QPushButton *pushButton_sysRedo;
     QPushButton *pushButton_sysSave;
-    QPushButton *pushButton_sysUndo;
-    QPushButton *pushButton_sysMoveDown;
     QFrame *line_3;
     QPushButton *pushButton_sysGet;
-    QPushButton *pushButton_sysToClipBoard;
     QPushButton *pushButton_usrSave;
     QPushButton *pushButton_usrMoveDown;
     QPushButton *pushButton_usrMoveup;
-    QPushButton *pushButton_sysDel;
     QPushButton *pushButton_usrAddFromDir;
     QPushButton *pushButton_usrAdd;
     QPushButton *pushButton_usrRedo;
     QPushButton *pushButton_usrUndo;
     QFrame *line;
     QWidget *sysPathList;
-    QLabel *usrLogBar;
-    QWidget *usrPathList;
-    QLabel *sysLogBar;
+    QPushButton *pushButton_sysMoveDown;
+    QPushButton *pushButton_sysAdd;
+    QPushButton *pushButton_sysMoveUp;
+    QPushButton *pushButton_sysUndo;
+    QPushButton *pushButton_sysDel;
+    QPushButton *pushButton_sysAddFromDir;
+    QPushButton *pushButton_sysToClipBoard;
+    QPushButton *pushButton_usrBundle;
+    QPushButton *pushButton_sysBundle;
     QMenuBar *menuBar;
     QMenu *menuLanguage;
     QToolBar *mainToolBar;
@@ -88,15 +88,33 @@ public:
         gridLayout = new QGridLayout();
         gridLayout->setSpacing(6);
         gridLayout->setObjectName(QStringLiteral("gridLayout"));
-        pushButton_sysAdd = new QPushButton(centralWidget);
-        pushButton_sysAdd->setObjectName(QStringLiteral("pushButton_sysAdd"));
+        usrLogBar = new QLabel(centralWidget);
+        usrLogBar->setObjectName(QStringLiteral("usrLogBar"));
+        usrLogBar->setEnabled(true);
+        usrLogBar->setFrameShape(QFrame::Panel);
+        usrLogBar->setTextFormat(Qt::RichText);
+        usrLogBar->setTextInteractionFlags(Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse);
 
-        gridLayout->addWidget(pushButton_sysAdd, 2, 0, 1, 1);
+        gridLayout->addWidget(usrLogBar, 5, 5, 1, 4);
 
-        pushButton_sysBundle = new QPushButton(centralWidget);
-        pushButton_sysBundle->setObjectName(QStringLiteral("pushButton_sysBundle"));
+        usrPathList = new QWidget(centralWidget);
+        usrPathList->setObjectName(QStringLiteral("usrPathList"));
 
-        gridLayout->addWidget(pushButton_sysBundle, 0, 2, 1, 1);
+        gridLayout->addWidget(usrPathList, 4, 5, 1, 4);
+
+        sysLogBar = new QLabel(centralWidget);
+        sysLogBar->setObjectName(QStringLiteral("sysLogBar"));
+        sysLogBar->setFrameShape(QFrame::Panel);
+        sysLogBar->setTextFormat(Qt::RichText);
+        sysLogBar->setScaledContents(true);
+        sysLogBar->setTextInteractionFlags(Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse);
+
+        gridLayout->addWidget(sysLogBar, 5, 0, 1, 4);
+
+        pushButton_sysRedo = new QPushButton(centralWidget);
+        pushButton_sysRedo->setObjectName(QStringLiteral("pushButton_sysRedo"));
+
+        gridLayout->addWidget(pushButton_sysRedo, 2, 2, 1, 1);
 
         line_2 = new QFrame(centralWidget);
         line_2->setObjectName(QStringLiteral("line_2"));
@@ -104,11 +122,6 @@ public:
         line_2->setFrameShadow(QFrame::Sunken);
 
         gridLayout->addWidget(line_2, 3, 0, 1, 4);
-
-        pushButton_sysAddFromDir = new QPushButton(centralWidget);
-        pushButton_sysAddFromDir->setObjectName(QStringLiteral("pushButton_sysAddFromDir"));
-
-        gridLayout->addWidget(pushButton_sysAddFromDir, 2, 1, 1, 1);
 
         pushButton_usrGet = new QPushButton(centralWidget);
         pushButton_usrGet->setObjectName(QStringLiteral("pushButton_usrGet"));
@@ -125,35 +138,10 @@ public:
 
         gridLayout->addWidget(pushButton_usrDel, 1, 6, 1, 1);
 
-        pushButton_usrBundle = new QPushButton(centralWidget);
-        pushButton_usrBundle->setObjectName(QStringLiteral("pushButton_usrBundle"));
-
-        gridLayout->addWidget(pushButton_usrBundle, 0, 7, 1, 1);
-
-        pushButton_sysMoveUp = new QPushButton(centralWidget);
-        pushButton_sysMoveUp->setObjectName(QStringLiteral("pushButton_sysMoveUp"));
-
-        gridLayout->addWidget(pushButton_sysMoveUp, 1, 2, 1, 1);
-
-        pushButton_sysRedo = new QPushButton(centralWidget);
-        pushButton_sysRedo->setObjectName(QStringLiteral("pushButton_sysRedo"));
-
-        gridLayout->addWidget(pushButton_sysRedo, 2, 2, 1, 1);
-
         pushButton_sysSave = new QPushButton(centralWidget);
         pushButton_sysSave->setObjectName(QStringLiteral("pushButton_sysSave"));
 
         gridLayout->addWidget(pushButton_sysSave, 0, 1, 1, 1);
-
-        pushButton_sysUndo = new QPushButton(centralWidget);
-        pushButton_sysUndo->setObjectName(QStringLiteral("pushButton_sysUndo"));
-
-        gridLayout->addWidget(pushButton_sysUndo, 2, 3, 1, 1);
-
-        pushButton_sysMoveDown = new QPushButton(centralWidget);
-        pushButton_sysMoveDown->setObjectName(QStringLiteral("pushButton_sysMoveDown"));
-
-        gridLayout->addWidget(pushButton_sysMoveDown, 1, 3, 1, 1);
 
         line_3 = new QFrame(centralWidget);
         line_3->setObjectName(QStringLiteral("line_3"));
@@ -166,11 +154,6 @@ public:
         pushButton_sysGet->setObjectName(QStringLiteral("pushButton_sysGet"));
 
         gridLayout->addWidget(pushButton_sysGet, 0, 0, 1, 1);
-
-        pushButton_sysToClipBoard = new QPushButton(centralWidget);
-        pushButton_sysToClipBoard->setObjectName(QStringLiteral("pushButton_sysToClipBoard"));
-
-        gridLayout->addWidget(pushButton_sysToClipBoard, 0, 3, 1, 1);
 
         pushButton_usrSave = new QPushButton(centralWidget);
         pushButton_usrSave->setObjectName(QStringLiteral("pushButton_usrSave"));
@@ -186,11 +169,6 @@ public:
         pushButton_usrMoveup->setObjectName(QStringLiteral("pushButton_usrMoveup"));
 
         gridLayout->addWidget(pushButton_usrMoveup, 1, 7, 1, 1);
-
-        pushButton_sysDel = new QPushButton(centralWidget);
-        pushButton_sysDel->setObjectName(QStringLiteral("pushButton_sysDel"));
-
-        gridLayout->addWidget(pushButton_sysDel, 1, 1, 1, 1);
 
         pushButton_usrAddFromDir = new QPushButton(centralWidget);
         pushButton_usrAddFromDir->setObjectName(QStringLiteral("pushButton_usrAddFromDir"));
@@ -224,26 +202,50 @@ public:
 
         gridLayout->addWidget(sysPathList, 4, 0, 1, 4);
 
-        usrLogBar = new QLabel(centralWidget);
-        usrLogBar->setObjectName(QStringLiteral("usrLogBar"));
-        usrLogBar->setEnabled(true);
-        usrLogBar->setTextFormat(Qt::RichText);
-        usrLogBar->setTextInteractionFlags(Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse);
+        pushButton_sysMoveDown = new QPushButton(centralWidget);
+        pushButton_sysMoveDown->setObjectName(QStringLiteral("pushButton_sysMoveDown"));
 
-        gridLayout->addWidget(usrLogBar, 5, 5, 1, 4);
+        gridLayout->addWidget(pushButton_sysMoveDown, 1, 3, 1, 1);
 
-        usrPathList = new QWidget(centralWidget);
-        usrPathList->setObjectName(QStringLiteral("usrPathList"));
+        pushButton_sysAdd = new QPushButton(centralWidget);
+        pushButton_sysAdd->setObjectName(QStringLiteral("pushButton_sysAdd"));
 
-        gridLayout->addWidget(usrPathList, 4, 5, 1, 4);
+        gridLayout->addWidget(pushButton_sysAdd, 2, 0, 1, 1);
 
-        sysLogBar = new QLabel(centralWidget);
-        sysLogBar->setObjectName(QStringLiteral("sysLogBar"));
-        sysLogBar->setTextFormat(Qt::RichText);
-        sysLogBar->setScaledContents(true);
-        sysLogBar->setTextInteractionFlags(Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse);
+        pushButton_sysMoveUp = new QPushButton(centralWidget);
+        pushButton_sysMoveUp->setObjectName(QStringLiteral("pushButton_sysMoveUp"));
 
-        gridLayout->addWidget(sysLogBar, 5, 0, 1, 4);
+        gridLayout->addWidget(pushButton_sysMoveUp, 1, 2, 1, 1);
+
+        pushButton_sysUndo = new QPushButton(centralWidget);
+        pushButton_sysUndo->setObjectName(QStringLiteral("pushButton_sysUndo"));
+
+        gridLayout->addWidget(pushButton_sysUndo, 2, 3, 1, 1);
+
+        pushButton_sysDel = new QPushButton(centralWidget);
+        pushButton_sysDel->setObjectName(QStringLiteral("pushButton_sysDel"));
+
+        gridLayout->addWidget(pushButton_sysDel, 1, 1, 1, 1);
+
+        pushButton_sysAddFromDir = new QPushButton(centralWidget);
+        pushButton_sysAddFromDir->setObjectName(QStringLiteral("pushButton_sysAddFromDir"));
+
+        gridLayout->addWidget(pushButton_sysAddFromDir, 2, 1, 1, 1);
+
+        pushButton_sysToClipBoard = new QPushButton(centralWidget);
+        pushButton_sysToClipBoard->setObjectName(QStringLiteral("pushButton_sysToClipBoard"));
+
+        gridLayout->addWidget(pushButton_sysToClipBoard, 0, 3, 1, 1);
+
+        pushButton_usrBundle = new QPushButton(centralWidget);
+        pushButton_usrBundle->setObjectName(QStringLiteral("pushButton_usrBundle"));
+
+        gridLayout->addWidget(pushButton_usrBundle, 0, 7, 1, 1);
+
+        pushButton_sysBundle = new QPushButton(centralWidget);
+        pushButton_sysBundle->setObjectName(QStringLiteral("pushButton_sysBundle"));
+
+        gridLayout->addWidget(pushButton_sysBundle, 0, 2, 1, 1);
 
 
         gridLayout_2->addLayout(gridLayout, 0, 0, 1, 1);
@@ -277,30 +279,30 @@ public:
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "PathEditor", Q_NULLPTR));
         actionEnglish->setText(QApplication::translate("MainWindow", "English", Q_NULLPTR));
         actionChinese->setText(QApplication::translate("MainWindow", "Chinese", Q_NULLPTR));
-        pushButton_sysAdd->setText(QApplication::translate("MainWindow", "Add", Q_NULLPTR));
-        pushButton_sysBundle->setText(QApplication::translate("MainWindow", "Bundle(x)", Q_NULLPTR));
-        pushButton_sysAddFromDir->setText(QApplication::translate("MainWindow", "Add From Dir", Q_NULLPTR));
+        usrLogBar->setText(QString());
+        sysLogBar->setText(QString());
+        pushButton_sysRedo->setText(QApplication::translate("MainWindow", "Redo", Q_NULLPTR));
         pushButton_usrGet->setText(QApplication::translate("MainWindow", "Fetch", Q_NULLPTR));
         pushButton_usrToClipBoard->setText(QApplication::translate("MainWindow", "ToClipborad", Q_NULLPTR));
         pushButton_usrDel->setText(QApplication::translate("MainWindow", "Delete", Q_NULLPTR));
-        pushButton_usrBundle->setText(QApplication::translate("MainWindow", "Bundle(x)", Q_NULLPTR));
-        pushButton_sysMoveUp->setText(QApplication::translate("MainWindow", "Move Up", Q_NULLPTR));
-        pushButton_sysRedo->setText(QApplication::translate("MainWindow", "Redo", Q_NULLPTR));
         pushButton_sysSave->setText(QApplication::translate("MainWindow", "Save", Q_NULLPTR));
-        pushButton_sysUndo->setText(QApplication::translate("MainWindow", "Undo", Q_NULLPTR));
-        pushButton_sysMoveDown->setText(QApplication::translate("MainWindow", "Move Down", Q_NULLPTR));
         pushButton_sysGet->setText(QApplication::translate("MainWindow", "Fetch", Q_NULLPTR));
-        pushButton_sysToClipBoard->setText(QApplication::translate("MainWindow", "ToClipborad", Q_NULLPTR));
         pushButton_usrSave->setText(QApplication::translate("MainWindow", "Save", Q_NULLPTR));
         pushButton_usrMoveDown->setText(QApplication::translate("MainWindow", "Move Down", Q_NULLPTR));
         pushButton_usrMoveup->setText(QApplication::translate("MainWindow", "Move Up", Q_NULLPTR));
-        pushButton_sysDel->setText(QApplication::translate("MainWindow", "Delete", Q_NULLPTR));
         pushButton_usrAddFromDir->setText(QApplication::translate("MainWindow", "Add From Dir", Q_NULLPTR));
         pushButton_usrAdd->setText(QApplication::translate("MainWindow", "Add", Q_NULLPTR));
         pushButton_usrRedo->setText(QApplication::translate("MainWindow", "Redo", Q_NULLPTR));
         pushButton_usrUndo->setText(QApplication::translate("MainWindow", "Undo", Q_NULLPTR));
-        usrLogBar->setText(QString());
-        sysLogBar->setText(QString());
+        pushButton_sysMoveDown->setText(QApplication::translate("MainWindow", "Move Down", Q_NULLPTR));
+        pushButton_sysAdd->setText(QApplication::translate("MainWindow", "Add", Q_NULLPTR));
+        pushButton_sysMoveUp->setText(QApplication::translate("MainWindow", "Move Up", Q_NULLPTR));
+        pushButton_sysUndo->setText(QApplication::translate("MainWindow", "Undo", Q_NULLPTR));
+        pushButton_sysDel->setText(QApplication::translate("MainWindow", "Delete", Q_NULLPTR));
+        pushButton_sysAddFromDir->setText(QApplication::translate("MainWindow", "Add From Dir", Q_NULLPTR));
+        pushButton_sysToClipBoard->setText(QApplication::translate("MainWindow", "ToClipborad", Q_NULLPTR));
+        pushButton_usrBundle->setText(QApplication::translate("MainWindow", "Bundle(x)", Q_NULLPTR));
+        pushButton_sysBundle->setText(QApplication::translate("MainWindow", "Bundle(x)", Q_NULLPTR));
         menuLanguage->setTitle(QApplication::translate("MainWindow", "Language", Q_NULLPTR));
     } // retranslateUi
 

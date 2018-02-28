@@ -23,17 +23,51 @@
    <layout class="QGridLayout" name="gridLayout_2">
     <item row="0" column="0">
      <layout class="QGridLayout" name="gridLayout">
-      <item row="2" column="0">
-       <widget class="QPushButton" name="pushButton_sysAdd">
+      <item row="5" column="5" colspan="4">
+       <widget class="QLabel" name="usrLogBar">
+        <property name="enabled">
+         <bool>true</bool>
+        </property>
+        <property name="frameShape">
+         <enum>QFrame::Panel</enum>
+        </property>
         <property name="text">
-         <string>Add</string>
+         <string/>
+        </property>
+        <property name="textFormat">
+         <enum>Qt::RichText</enum>
+        </property>
+        <property name="textInteractionFlags">
+         <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
         </property>
        </widget>
       </item>
-      <item row="0" column="2">
-       <widget class="QPushButton" name="pushButton_sysBundle">
+      <item row="4" column="5" colspan="4">
+       <widget class="QWidget" name="usrPathList" native="true"/>
+      </item>
+      <item row="5" column="0" colspan="4">
+       <widget class="QLabel" name="sysLogBar">
+        <property name="frameShape">
+         <enum>QFrame::Panel</enum>
+        </property>
         <property name="text">
-         <string>Bundle(x)</string>
+         <string/>
+        </property>
+        <property name="textFormat">
+         <enum>Qt::RichText</enum>
+        </property>
+        <property name="scaledContents">
+         <bool>true</bool>
+        </property>
+        <property name="textInteractionFlags">
+         <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="2">
+       <widget class="QPushButton" name="pushButton_sysRedo">
+        <property name="text">
+         <string>Redo</string>
         </property>
        </widget>
       </item>
@@ -41,13 +75,6 @@
        <widget class="Line" name="line_2">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1">
-       <widget class="QPushButton" name="pushButton_sysAddFromDir">
-        <property name="text">
-         <string>Add From Dir</string>
         </property>
        </widget>
       </item>
@@ -72,45 +99,10 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="7">
-       <widget class="QPushButton" name="pushButton_usrBundle">
-        <property name="text">
-         <string>Bundle(x)</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="2">
-       <widget class="QPushButton" name="pushButton_sysMoveUp">
-        <property name="text">
-         <string>Move Up</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="2">
-       <widget class="QPushButton" name="pushButton_sysRedo">
-        <property name="text">
-         <string>Redo</string>
-        </property>
-       </widget>
-      </item>
       <item row="0" column="1">
        <widget class="QPushButton" name="pushButton_sysSave">
         <property name="text">
          <string>Save</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="3">
-       <widget class="QPushButton" name="pushButton_sysUndo">
-        <property name="text">
-         <string>Undo</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="3">
-       <widget class="QPushButton" name="pushButton_sysMoveDown">
-        <property name="text">
-         <string>Move Down</string>
         </property>
        </widget>
       </item>
@@ -125,13 +117,6 @@
        <widget class="QPushButton" name="pushButton_sysGet">
         <property name="text">
          <string>Fetch</string>
-        </property>
-       </widget>
-      </item>
-      <item row="0" column="3">
-       <widget class="QPushButton" name="pushButton_sysToClipBoard">
-        <property name="text">
-         <string>ToClipborad</string>
         </property>
        </widget>
       </item>
@@ -153,13 +138,6 @@
        <widget class="QPushButton" name="pushButton_usrMoveup">
         <property name="text">
          <string>Move Up</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QPushButton" name="pushButton_sysDel">
-        <property name="text">
-         <string>Delete</string>
         </property>
        </widget>
       </item>
@@ -201,38 +179,66 @@
       <item row="4" column="0" colspan="4">
        <widget class="QWidget" name="sysPathList" native="true"/>
       </item>
-      <item row="5" column="5" colspan="4">
-       <widget class="QLabel" name="usrLogBar">
-        <property name="enabled">
-         <bool>true</bool>
-        </property>
+      <item row="1" column="3">
+       <widget class="QPushButton" name="pushButton_sysMoveDown">
         <property name="text">
-         <string/>
-        </property>
-        <property name="textFormat">
-         <enum>Qt::RichText</enum>
-        </property>
-        <property name="textInteractionFlags">
-         <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
+         <string>Move Down</string>
         </property>
        </widget>
       </item>
-      <item row="4" column="5" colspan="4">
-       <widget class="QWidget" name="usrPathList" native="true"/>
-      </item>
-      <item row="5" column="0" colspan="4">
-       <widget class="QLabel" name="sysLogBar">
+      <item row="2" column="0">
+       <widget class="QPushButton" name="pushButton_sysAdd">
         <property name="text">
-         <string/>
+         <string>Add</string>
         </property>
-        <property name="textFormat">
-         <enum>Qt::RichText</enum>
+       </widget>
+      </item>
+      <item row="1" column="2">
+       <widget class="QPushButton" name="pushButton_sysMoveUp">
+        <property name="text">
+         <string>Move Up</string>
         </property>
-        <property name="scaledContents">
-         <bool>true</bool>
+       </widget>
+      </item>
+      <item row="2" column="3">
+       <widget class="QPushButton" name="pushButton_sysUndo">
+        <property name="text">
+         <string>Undo</string>
         </property>
-        <property name="textInteractionFlags">
-         <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByMouse</set>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QPushButton" name="pushButton_sysDel">
+        <property name="text">
+         <string>Delete</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1">
+       <widget class="QPushButton" name="pushButton_sysAddFromDir">
+        <property name="text">
+         <string>Add From Dir</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QPushButton" name="pushButton_sysToClipBoard">
+        <property name="text">
+         <string>ToClipborad</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="7">
+       <widget class="QPushButton" name="pushButton_usrBundle">
+        <property name="text">
+         <string>Bundle(x)</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="2">
+       <widget class="QPushButton" name="pushButton_sysBundle">
+        <property name="text">
+         <string>Bundle(x)</string>
         </property>
        </widget>
       </item>
