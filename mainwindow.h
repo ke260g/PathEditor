@@ -64,6 +64,7 @@ private slots:
 private:
     Ui::MainWindow * ui;
 
+    void mUpdate();
     void closeEvent(QCloseEvent * event);
 
     QPathList * sysPathList;
@@ -71,17 +72,19 @@ private:
 
     bool usrIsSaved;
     bool sysIsSaved;
-    void usrOnNewModification();
-    void sysOnNewModification();
+    void usrDoSaved();
+    void sysDoSaved();
+    void usrUnSaved();
+    void sysUnSaved();
 
     // Tips
     class Tips;
 
     // language supports
     class Language;
-    template<class Lang> void setLanguage();
     QString currentLanguage;
     QTranslator translator;
+    template<class Lang> void setLanguage();
 };
 
 #endif // MAINWINDOW_H
