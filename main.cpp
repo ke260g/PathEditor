@@ -6,11 +6,10 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
-    WIN32UAC::elevate();
-
     MainWindow w;
     w.show();
     w.showAfter();
+    WIN32UAC::elevate();
 
     return a.exec();
 }

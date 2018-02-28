@@ -143,16 +143,17 @@ void WIN32UAC::elevate() {
             sei.hwnd = mHWND;
             sei.nShow = SW_NORMAL;
 
-            if (!ShellExecuteEx(&sei))
-            {
+            if (!ShellExecuteEx(&sei)) {
                 DWORD dwError = GetLastError();
                 if (dwError == ERROR_CANCELLED)
                 {
                     qDebug() << "elevate: ERROR_CANCELLED";
                 }
+                // when click "Not"
+            } else {
+                // when click "Yes"
+                exit(EXIT_SUCCESS);
             }
-            else
-                EndDialog(mHWND, TRUE);  // Quit itself
         }
     }
 }
