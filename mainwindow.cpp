@@ -3,66 +3,16 @@
 
 #include "qenvvarpath.h"
 #include "win32uac.h"
+#include "mainwindow/language.h"
+#include "mainwindow/tips.h"
 
 #include <QDebug>
-
-#include <QMessageBox>
-#include <QFileDialog>
+#include <QCoreApplication>
+#include <QString>
 #include <QFile>
 #include <QDir>
 
-#include <QCoreApplication>
-
-// MainWindow::Language
-class MainWindow::Language {
-    // not allow to instantialize
-private:
-    Language();
-    ~Language();
-
-public:
-    class Chinese {
-    public:
-        static QString name;
-    };
-
-    class English {
-    public:
-        static QString name;
-    };
-};
-
-// name's value is filename of translation file
-QString MainWindow::Language::Chinese::name = "tr_zh";
-QString MainWindow::Language::English::name = "tr_en";
-
-template<class mLanguage>
-void MainWindow::setLanguage() {
-    if(currentLanguage == mLanguage::name)
-        return;
-
-    QString basename = QString(":/translations/") + mLanguage::name;
-    QString fullname = basename + QString(".qm");
-    if(QFile::exists(fullname) == false)
-        return;
-
-    translator.load(basename);
-    QCoreApplication::instance()->installTranslator(&translator);
-    mUpdate();
-    currentLanguage = mLanguage::name;
-};
-
-class MainWindow::Tips {
-private:
-    Tips();
-    ~Tips();
-
-public:
-    static bool delItemConfirm(QWidget *parent, /*in*/const QString & item);
-    static void getNewItemFromDir(QWidget *parent, /*out*/QString & item);
-    static void sysPathRWError(QWidget * parent, /*in*/QString & msg);
-    static void saveSucceeded(QWidget * parent);
-};
+#define CONFIG_FILENAME "config.json"
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -100,6 +50,27 @@ MainWindow::~MainWindow() {
     delete sysPathList;
 }
 
+template<class mLanguage>
+void MainWindow::setLanguage() {
+    if(currentLanguage == mLanguage::name)
+        return;
+
+    // access translation file
+    QString basename = QString(":/translations/") + mLanguage::name;
+    QString fullname = basename + QString(".qm");
+    if(QFile::exists(fullname) == false)
+        return;
+
+    // set new language
+    translator.load(basename);
+    QCoreApplication::instance()->installTranslator(&translator);
+    showAgain();
+    currentLanguage = mLanguage::name;
+};
+
+void MainWindow::showBefore() {
+}
+
 void MainWindow::showAfter() {
     // usrGet should be called before sysGet
     // as sysGet may need Administrative Privileges
@@ -113,7 +84,7 @@ void MainWindow::showAfter() {
     hasInit = true;
 }
 
-void MainWindow::mUpdate() {
+void MainWindow::showAgain() {
     ui->retranslateUi(this);
 
     if(usrIsSaved == false)
@@ -128,70 +99,13 @@ void MainWindow::closeEvent(QCloseEvent * event) {
         event->accept();
         return;
     }
-    QString title = tr("Close Confirmation");
-    QString tips = tr("Modification is not saved\n"
-                      "Are you sure you want to exit?");
-    int retval = QMessageBox::question(this, title,  tips,
-                                       QMessageBox::Yes|QMessageBox::No,
-                                       QMessageBox::No);
-    if (retval == QMessageBox::Yes)
+    if (Tips::closeConfirm(this))
         event->accept();
     else
         event->ignore();
 };
 
-// Tips implement
-bool MainWindow::Tips::delItemConfirm(QWidget *parent, /*in*/const QString & item) {
-    QString title;
-    QString tips;
-    title = tr("Delete 'Path' Entry");
-    tips = tr("Are you sure to delete this 'Path' entry?");
-    tips += '\n';
-
-    if(item.isEmpty())
-        tips += tr("This is an empty entry!");
-    else
-        tips += tr("Entry: ") + item + '\n' + tr("will be deleted!");
-
-    int retval = QMessageBox::warning(parent, title, tips,
-                                      QMessageBox::Yes |
-                                      QMessageBox::Cancel,
-                                      QMessageBox::Cancel);
-    if(retval == QMessageBox::Yes)
-        return true;
-    else
-        return false;
-}
-
-void MainWindow::Tips::getNewItemFromDir(QWidget *parent, /*out*/QString & item) {
-    QString strHomeDir = QDir::toNativeSeparators(QDir::home().path());
-    QString str = QFileDialog::getExistingDirectory(parent, tr("Select Directory"),
-                                                    strHomeDir,
-                                                    QFileDialog::ShowDirsOnly |
-                                                    QFileDialog::DontResolveSymlinks);
-    // platform dir seperator compatition handle
-    item = QDir::toNativeSeparators(str);
-}
-
-void MainWindow::Tips::sysPathRWError(QWidget * parent, /*in*/QString & msg) {
-    QString title;
-    QString tips;
-    title = tr("Error");
-    tips = msg;
-    tips += '\n';
-    if(WIN32UAC::isRunAsAdmin() == false) {
-        tips += tr("Administrative Privileges is needed.\n"
-                   "Re-run the program with Administrative Privileges.\n"
-                   "Or say yes when ask for Administrative Privileges at the beginning.");
-    } else
-        tips += tr("Unkown") + ' ' + tr("Error");
-    QMessageBox::critical(parent, title, tips);
-}
-
-void MainWindow::Tips::saveSucceeded(QWidget * parent) {
-    QMessageBox::information(parent, "", tr("Save Succeeded"));
-}
-
+// save & unsave
 void MainWindow::sysUnSaved() {
     sysIsSaved = false;
     ui->sysLogBar->setText(tr("Modification is not saved"));

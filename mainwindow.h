@@ -18,7 +18,9 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+    void showBefore();
     void showAfter();
+    void showAgain();
 
 private slots:
     void on_pushButton_sysGet_clicked();
@@ -64,8 +66,8 @@ private slots:
 private:
     Ui::MainWindow * ui;
 
-    void mUpdate();
     void closeEvent(QCloseEvent * event);
+
 
     bool hasInit;
 

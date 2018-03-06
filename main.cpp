@@ -7,6 +7,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
 
     MainWindow w;
+    w.showBefore();
     w.show();
     w.showAfter();
     WIN32UAC::elevate();

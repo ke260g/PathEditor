@@ -26,12 +26,16 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     qenvvarpath.cpp \
     qpathlist.cpp \
-    win32uac.cpp
+    win32uac.cpp \
+    mainwindow/language.cpp \
+    mainwindow/tips.cpp
 
 HEADERS  += mainwindow.h \
     qenvvarpath.h \
     qpathlist.h \
-    win32uac.h
+    win32uac.h \
+    mainwindow/language.h \
+    mainwindow/tips.h
 
 FORMS    += mainwindow.ui
 
