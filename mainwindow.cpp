@@ -60,9 +60,6 @@ void MainWindow::setLanguage() {
             fullname;
 
     if(hasInit) {
-        if(currentLanguage == mLanguage::name)
-            return;
-
         langname = mLanguage::name;
     } else {
         QString configLanguage;
