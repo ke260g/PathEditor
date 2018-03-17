@@ -11,6 +11,8 @@
 #include <QString>
 #include <QFile>
 #include <QDir>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 #define CONFIG_FILENAME "config.json"
 
@@ -18,6 +20,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow) {
     ui->setupUi(this);
+
+    hasInit = false;
 
     setLanguage<Language::English>();
 
@@ -41,7 +45,6 @@ MainWindow::MainWindow(QWidget *parent) :
     usrDoSaved();
     sysDoSaved();
 
-    hasInit = false;
 }
 
 MainWindow::~MainWindow() {
@@ -52,12 +55,27 @@ MainWindow::~MainWindow() {
 
 template<class mLanguage>
 void MainWindow::setLanguage() {
-    if(currentLanguage == mLanguage::name)
-        return;
+    QString langname,
+            basename,
+            fullname;
 
+    if(hasInit) {
+        if(currentLanguage == mLanguage::name)
+            return;
+
+        langname = mLanguage::name;
+    } else {
+        QString configLanguage;
+        bool hasSetLanguage = getConfig("language", configLanguage);
+        if(hasSetLanguage)
+            langname = configLanguage;
+        else
+            langname = Language::English::name;
+    }
+
+    basename = QString(":/translations/") + langname;
+    fullname = basename + QString(".qm");
     // access translation file
-    QString basename = QString(":/translations/") + mLanguage::name;
-    QString fullname = basename + QString(".qm");
     if(QFile::exists(fullname) == false)
         return;
 
@@ -66,6 +84,8 @@ void MainWindow::setLanguage() {
     QCoreApplication::instance()->installTranslator(&translator);
     showAgain();
     currentLanguage = mLanguage::name;
+
+    setConfig("language", mLanguage::name);
 };
 
 void MainWindow::showBefore() {
@@ -104,6 +124,64 @@ void MainWindow::closeEvent(QCloseEvent * event) {
     else
         event->ignore();
 };
+
+// configuration
+QString MainWindow::configFilename = CONFIG_FILENAME;
+void MainWindow::setConfig(/*in*/const QString & key, /*in*/const QString & value) {
+    QString pwd = QDir::currentPath();
+    QDir::setCurrent(QCoreApplication::applicationDirPath());
+
+    QFile file;
+    QString configString;
+    QJsonObject configJson;
+    QJsonDocument docJson;
+    file.setFileName(CONFIG_FILENAME);
+
+    // get existed config
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    configString = file.readAll();
+    configJson = QJsonDocument::fromJson(configString.toUtf8()).object();
+    file.close();
+
+    // set new config
+    configJson[key] = value;
+    file.open(QIODevice::WriteOnly | QIODevice::Text);
+    docJson.setObject(configJson);
+    configString = docJson.toJson();
+    file.write(configString.toUtf8(), configString.size());
+    file.close();
+
+    QDir::setCurrent(pwd);
+}
+
+bool MainWindow::getConfig(/*in*/const QString & key, /*out*/QString & value) {
+    bool hasKey = false;
+    QString pwd = QDir::currentPath();
+    QDir::setCurrent(QCoreApplication::applicationDirPath());
+
+    QFile file;
+    QString configString;
+    QJsonObject configJson;
+    QJsonDocument docJson;
+    file.setFileName(CONFIG_FILENAME);
+
+    // get existed config
+    file.open(QIODevice::ReadOnly | QIODevice::Text);
+    configString = file.readAll();
+    configJson = QJsonDocument::fromJson(configString.toUtf8()).object();
+    file.close();
+
+    if(configJson.contains(key)) {
+        value = configJson[key].toString();
+        hasKey = true;
+    }  else {
+        value = "";
+        hasKey = false;
+    }
+
+    QDir::setCurrent(pwd);
+    return hasKey;
+}
 
 // save & unsave
 void MainWindow::sysUnSaved() {

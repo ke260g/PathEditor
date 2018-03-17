@@ -89,6 +89,11 @@ private:
     QString currentLanguage;
     QTranslator translator;
     template<class Lang> void setLanguage();
+
+    // configuration
+    static QString configFilename;
+    void setConfig(/*in*/const QString & key, /*in*/const QString & value);
+    bool getConfig(/*in*/const QString & key, /*out*/QString & value);
 };
 
 #endif // MAINWINDOW_H
