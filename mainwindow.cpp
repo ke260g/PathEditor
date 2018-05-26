@@ -62,6 +62,7 @@ void MainWindow::setLanguage() {
     if(hasInit) {
         langname = mLanguage::name;
     } else {
+        // init
         QString configLanguage;
         bool hasSetLanguage = getConfig("language", configLanguage);
         if(hasSetLanguage)
@@ -80,9 +81,8 @@ void MainWindow::setLanguage() {
     translator.load(basename);
     QCoreApplication::instance()->installTranslator(&translator);
     showAgain();
-    currentLanguage = mLanguage::name;
-
-    setConfig("language", mLanguage::name);
+    currentLanguage = langname;
+    setConfig("language", currentLanguage);
 };
 
 void MainWindow::showBefore() {
